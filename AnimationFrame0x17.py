@@ -5,29 +5,29 @@ from collections import OrderedDict
 class AnimationFrame0x17():
     __bones_number = 0x17
 
-    animation_frame_properties_ordered_dict = OrderedDict([('Offset', 0),
-                                                           ('JumpStrength', 0),
-                                                           ('Unknown', 0),
-                                                           ('Mesh', 0),
-                                                           ('UpperBody', 0),
-                                                           ('LowerBody', 0),
-                                                           ('SpineFlexure', 0),
-                                                           ('Neck', 0),
-                                                           ('Head', 0),
-                                                           ('RightInnerShoulder', 0),
-                                                           ('RightOuterShoulder', 0),
-                                                           ('RightElbow', 0),
-                                                           ('RightHand', 0),
-                                                           ('LeftInnerShoulder', 0),
-                                                           ('LeftOuterShoulder', 0),
-                                                           ('LeftElbow', 0),
-                                                           ('LeftHand', 0),
-                                                           ('RightHip', 0),
-                                                           ('RightKnee', 0),
-                                                           ('RightFoot', 0),
-                                                           ('LeftHip', 0),
-                                                           ('LeftKnee', 0),
-                                                           ('LeftFoot', 0)])
+    properties = OrderedDict([('Offset', 0),
+                              ('JumpStrength', 0),
+                              ('Unknown', 0),
+                              ('Mesh', 0),
+                              ('UpperBody', 0),
+                              ('LowerBody', 0),
+                              ('SpineFlexure', 0),
+                              ('Neck', 0),
+                              ('Head', 0),
+                              ('RightInnerShoulder', 0),
+                              ('RightOuterShoulder', 0),
+                              ('RightElbow', 0),
+                              ('RightHand', 0),
+                              ('LeftInnerShoulder', 0),
+                              ('LeftOuterShoulder', 0),
+                              ('LeftElbow', 0),
+                              ('LeftHand', 0),
+                              ('RightHip', 0),
+                              ('RightKnee', 0),
+                              ('RightFoot', 0),
+                              ('LeftHip', 0),
+                              ('LeftKnee', 0),
+                              ('LeftFoot', 0)])
 
     def __init__(self, animation_frame_tuple):
         self.__check_if_animation_frame_is_valid(animation_frame_tuple)
@@ -46,12 +46,12 @@ class AnimationFrame0x17():
                                  f"Variable at index {index} in animation_frame_tuple is not a float.")
 
     def __initialize_animation_frame(self, animation_frame_tuple):
-        frame_properties_list = list(self.animation_frame_properties_ordered_dict.items())
+        frame_properties_list = list(self.properties.items())
 
         for index in range(len(frame_properties_list)):
             key = frame_properties_list[index][0]
             value = frame_properties_list[index][1]
-            self.animation_frame_properties_ordered_dict[key] = self.__get_euler_from_tuple(animation_frame_tuple, index*3)
+            self.properties[key] = self.__get_euler_from_tuple(animation_frame_tuple, index * 3)
 
     @staticmethod
     def __get_euler_from_tuple(tuple, tuple_start_index):
@@ -59,7 +59,7 @@ class AnimationFrame0x17():
         return euler
 
     def __repr__(self):
-        frame_properties_list = list(self.animation_frame_properties_ordered_dict.items())
+        frame_properties_list = list(self.properties.items())
         animation_frame_text = ""
 
         for index in range(len(frame_properties_list)):
