@@ -32,7 +32,7 @@ class AnimationFrame0x17():
 
     def __check_if_animation_frame_is_valid(self, animation_frame_tuple):
         if (len(animation_frame_tuple) != 23 * 3):
-            raise ValueError(f"animationFrameTuple argument must have 23 values in it,"
+            raise ValueError(f"animationFrameTuple argument must have 23 values in it, "
                              f"and this tuple has: {len(animation_frame_tuple)}.")
 
         for index in range(len(animation_frame_tuple)):
