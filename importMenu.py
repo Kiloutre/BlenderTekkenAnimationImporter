@@ -1,0 +1,22 @@
+import bpy
+
+# from . import animationReader
+from . import textreader
+from . import animationReader
+
+
+# Only needed if you want to add into a dynamic menu
+def menu_func_import(self, context):
+    self.layout.operator(textreader.TextReader.bl_idname, text="Text Import Operator")
+    self.layout.operator(animationReader.AnimationReader.bl_idname, text="Import Tekken 7 Animation")
+
+def register():
+    bpy.utils.register_class(textreader.TextReader)
+    bpy.utils.register_class(animationReader.AnimationReader)
+    bpy.types.TOPBAR_MT_file_import.append(menu_func_import)
+
+
+def unregister():
+    bpy.utils.unregister_class(textreader.TextReader)
+    bpy.utils.unregister_class(animationReader.AnimationReader)
+    bpy.types.TOPBAR_MT_file_import.remove(menu_func_import)
