@@ -1,4 +1,5 @@
 import bpy
+import os
 
 # ImportHelper is a helper class, defines filename and invoke() function which calls the file selector.
 import struct
@@ -31,17 +32,17 @@ class AnimationReader(Operator, ImportHelper):
         print("started read_file method")
 
         with open(filepath, 'rb') as animationFile:
-            binaryData = animationFile.read()
+            binary_data = animationFile.read()
 
-        self.__get_animation(binaryData)
+        self.__get_animation(binary_data)
 
         operation_status = {'FINISHED'}
         return operation_status
 
-    def __get_animation(self, binaryData):
+    def __get_animation(self, binary_data):
         # "< 2B H 24I" stands for little endian, 2 unsigned bytes, unsigned short, 24 unsigned 4-byte integers
         struct_packer = struct.Struct("< 2B H 24I")
-        animation_header_tuple = struct_packer.unpack_from(binaryData)
+        animation_header_tuple = struct_packer.unpack_from(binary_data)
         animation_header = AnimationHeader0xC8.AnimationHeader0xC8(animation_header_tuple)
 
         print(animation_header_tuple)
