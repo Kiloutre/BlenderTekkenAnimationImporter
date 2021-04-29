@@ -1,37 +1,40 @@
 import mathutils
+from collections import OrderedDict
 
 
 class AnimationFrame0x17():
-    Offset = mathutils.Euler([0.0, 0.0, 0.0])
-    JumpStrength = mathutils.Euler([0.0, 0.0, 0.0])
-    Unknown = mathutils.Euler([0.0, 0.0, 0.0])
-    Mesh = mathutils.Euler([0.0, 0.0, 0.0])
-    UpperBody = mathutils.Euler([0.0, 0.0, 0.0])
-    LowerBody = mathutils.Euler([0.0, 0.0, 0.0])
-    SpineFlexure = mathutils.Euler([0.0, 0.0, 0.0])
-    Neck = mathutils.Euler([0.0, 0.0, 0.0])
-    Head = mathutils.Euler([0.0, 0.0, 0.0])
-    RightInnerShoulder = mathutils.Euler([0.0, 0.0, 0.0])
-    RightOuterShoulder = mathutils.Euler([0.0, 0.0, 0.0])
-    RightElbow = mathutils.Euler([0.0, 0.0, 0.0])
-    RightHand = mathutils.Euler([0.0, 0.0, 0.0])
-    LeftInnerShoulder = mathutils.Euler([0.0, 0.0, 0.0])
-    LeftOuterShoulder = mathutils.Euler([0.0, 0.0, 0.0])
-    LeftElbow = mathutils.Euler([0.0, 0.0, 0.0])
-    LeftHand = mathutils.Euler([0.0, 0.0, 0.0])
-    RightHip = mathutils.Euler([0.0, 0.0, 0.0])
-    RightKnee = mathutils.Euler([0.0, 0.0, 0.0])
-    RightFoot = mathutils.Euler([0.0, 0.0, 0.0])
-    LeftHip = mathutils.Euler([0.0, 0.0, 0.0])
-    LeftKnee = mathutils.Euler([0.0, 0.0, 0.0])
-    LeftFoot = mathutils.Euler([0.0, 0.0, 0.0])
+    __bones_number = 0x17
+
+    animation_frame_properties_ordered_dict = OrderedDict([('Offset', 0),
+                                                           ('JumpStrength', 0),
+                                                           ('Unknown', 0),
+                                                           ('Mesh', 0),
+                                                           ('UpperBody', 0),
+                                                           ('LowerBody', 0),
+                                                           ('SpineFlexure', 0),
+                                                           ('Neck', 0),
+                                                           ('Head', 0),
+                                                           ('RightInnerShoulder', 0),
+                                                           ('RightOuterShoulder', 0),
+                                                           ('RightElbow', 0),
+                                                           ('RightHand', 0),
+                                                           ('LeftInnerShoulder', 0),
+                                                           ('LeftOuterShoulder', 0),
+                                                           ('LeftElbow', 0),
+                                                           ('LeftHand', 0),
+                                                           ('RightHip', 0),
+                                                           ('RightKnee', 0),
+                                                           ('RightFoot', 0),
+                                                           ('LeftHip', 0),
+                                                           ('LeftKnee', 0),
+                                                           ('LeftFoot', 0)])
 
     def __init__(self, animation_frame_tuple):
         self.__check_if_animation_frame_is_valid(animation_frame_tuple)
         self.__initialize_animation_frame(animation_frame_tuple)
 
     def __check_if_animation_frame_is_valid(self, animation_frame_tuple):
-        if (len(animation_frame_tuple) != 23 * 3):
+        if (len(animation_frame_tuple) != self.__bones_number * 3):
             raise ValueError(f"animationFrameTuple argument must have 23 values in it, "
                              f"and this tuple has: {len(animation_frame_tuple)}.")
 
@@ -43,33 +46,25 @@ class AnimationFrame0x17():
                                  f"Variable at index {index} in animation_frame_tuple is not a float.")
 
     def __initialize_animation_frame(self, animation_frame_tuple):
-        tup = animation_frame_tuple
+        frame_properties_list = list(self.animation_frame_properties_ordered_dict.items())
 
-        self.Offset = self.__get_euler_from_tuple(animation_frame_tuple, 0)
-        self.JumpStrength = self.__get_euler_from_tuple(animation_frame_tuple, 3)
-        self.Unknown = self.__get_euler_from_tuple(animation_frame_tuple, 6)
-        self.Mesh = self.__get_euler_from_tuple(animation_frame_tuple, 9)
-        self.UpperBody = self.__get_euler_from_tuple(animation_frame_tuple, 12)
-        self.LowerBody = self.__get_euler_from_tuple(animation_frame_tuple, 15)
-        self.SpineFlexure = self.__get_euler_from_tuple(animation_frame_tuple, 18)
-        self.Neck = self.__get_euler_from_tuple(animation_frame_tuple, 21)
-        self.Head = self.__get_euler_from_tuple(animation_frame_tuple, 24)
-        self.RightInnerShoulder = self.__get_euler_from_tuple(animation_frame_tuple, 27)
-        self.RightOuterShoulder = self.__get_euler_from_tuple(animation_frame_tuple, 30)
-        self.RightElbow = self.__get_euler_from_tuple(animation_frame_tuple, 33)
-        self.RightHand = self.__get_euler_from_tuple(animation_frame_tuple, 36)
-        self.LeftInnerShoulder = self.__get_euler_from_tuple(animation_frame_tuple, 39)
-        self.LeftOuterShoulder = self.__get_euler_from_tuple(animation_frame_tuple, 42)
-        self.LeftElbow = self.__get_euler_from_tuple(animation_frame_tuple, 45)
-        self.LeftHand = self.__get_euler_from_tuple(animation_frame_tuple, 48)
-        self.RightHip = self.__get_euler_from_tuple(animation_frame_tuple, 51)
-        self.RightKnee = self.__get_euler_from_tuple(animation_frame_tuple, 54)
-        self.RightFoot = self.__get_euler_from_tuple(animation_frame_tuple, 57)
-        self.LeftHip = self.__get_euler_from_tuple(animation_frame_tuple, 60)
-        self.LeftKnee = self.__get_euler_from_tuple(animation_frame_tuple, 63)
-        self.LeftFoot = self.__get_euler_from_tuple(animation_frame_tuple, 66)
+        for index in range(len(frame_properties_list)):
+            key = frame_properties_list[index][0]
+            value = frame_properties_list[index][1]
+            self.animation_frame_properties_ordered_dict[key] = self.__get_euler_from_tuple(animation_frame_tuple, index*3)
 
     @staticmethod
     def __get_euler_from_tuple(tuple, tuple_start_index):
         euler = mathutils.Euler([tuple[tuple_start_index], tuple[tuple_start_index+1], tuple[tuple_start_index+2]])
         return euler
+
+    def __repr__(self):
+        frame_properties_list = list(self.animation_frame_properties_ordered_dict.items())
+        animation_frame_text = ""
+
+        for index in range(len(frame_properties_list)):
+            key = frame_properties_list[index][0]
+            value = frame_properties_list[index][1]
+            animation_frame_text += f"{key}: {value}\n"
+
+        return animation_frame_text
