@@ -9,6 +9,7 @@ from bpy.props import StringProperty, BoolProperty, EnumProperty
 from bpy.types import Operator
 
 from . import AnimationHeader0xC8
+from . import AnimationFrame0x17
 
 
 class AnimationReader(Operator, ImportHelper):
@@ -42,8 +43,22 @@ class AnimationReader(Operator, ImportHelper):
     def __get_animation(self, binary_data):
         # "< 2B H 24I" stands for little endian, 2 unsigned bytes, unsigned short, 24 unsigned 4-byte integers
         struct_packer = struct.Struct("< 2B H 24I")
+
+        header_size = struct_packer.size
+
         animation_header_tuple = struct_packer.unpack_from(binary_data)
+
+        struct_packer = struct.Struct("< 69f")
+
+        animation_frame_size = struct_packer.size
+
+        animation_frame_tuple = struct_packer.unpack_from(binary_data, header_size)
+
         animation_header = AnimationHeader0xC8.AnimationHeader0xC8(animation_header_tuple)
+
+        first_animation_frame = AnimationFrame0x17.AnimationFrame0x17(animation_frame_tuple)
 
         print(animation_header_tuple)
         print(animation_header)
+        print(animation_frame_tuple)
+        print(first_animation_frame)
