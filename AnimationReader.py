@@ -1,15 +1,10 @@
-import bpy
-import os
-
-
-import struct
-
 # ImportHelper is a helper class, defines filename and invoke() function which calls the file selector.
-from bpy_extras.io_utils import ImportHelper
-from bpy.props import StringProperty, BoolProperty, EnumProperty
+from bpy.props import StringProperty
 from bpy.types import Operator
+from bpy_extras.io_utils import ImportHelper
 
 from . import Animation0xC80x17
+
 
 class AnimationReader(Operator, ImportHelper):
     """This appears in the tooltip of the operator and in the generated docs"""
@@ -25,21 +20,20 @@ class AnimationReader(Operator, ImportHelper):
     )
 
     def execute(self, context):
-        operation_status = self.__read_animation_file(context, self.filepath)
-        return operation_status
-
-    def __read_animation_file(self, context, filepath = None):
-        print("started read_file method")
-
-        with open(filepath, 'rb') as animationFile:
-            binary_data = animationFile.read()
-
-        self.__get_animation(binary_data)
+        animation_binary = self.__get_binary_data_from_animation_file(context, self.filepath)
+        animation = self.__get_animation(animation_binary)
+        print(animation)
 
         operation_status = {'FINISHED'}
         return operation_status
 
+    def __get_binary_data_from_animation_file(self, context, filepath = None):
+        with open(filepath, 'rb') as animationFile:
+            binary_data = animationFile.read()
+            return binary_data
+
     def __get_animation(self, binary_data):
         # "< 2B H 24I" stands for little endian, 2 unsigned bytes, unsigned short, 24 unsigned 4-byte integers
         animation = Animation0xC80x17.Animation0xC80x17(binary_data)
-        print(animation)
+
+        return animation
