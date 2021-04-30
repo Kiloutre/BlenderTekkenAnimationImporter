@@ -3,7 +3,7 @@ from bpy.props import StringProperty
 from bpy.types import Operator
 from bpy_extras.io_utils import ImportHelper
 
-from . import Animation0xC80x17
+from .Animation0xC80x17 import Animation0xC80x17
 
 
 class AnimationImporter(Operator, ImportHelper):
@@ -34,6 +34,6 @@ class AnimationImporter(Operator, ImportHelper):
 
     def __get_animation(self, binary_data):
         # "< 2B H 24I" stands for little endian, 2 unsigned bytes, unsigned short, 24 unsigned 4-byte integers
-        animation = Animation0xC80x17.Animation0xC80x17(binary_data)
+        animation = Animation0xC80x17(binary_data)
 
         return animation
