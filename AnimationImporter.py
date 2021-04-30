@@ -6,7 +6,7 @@ from bpy_extras.io_utils import ImportHelper
 from . import Animation0xC80x17
 
 
-class AnimationReader(Operator, ImportHelper):
+class AnimationImporter(Operator, ImportHelper):
     """This appears in the tooltip of the operator and in the generated docs"""
     bl_idname = "animation_reader.read_animation"  # important since its how bpy.ops.animation_reader.read_animation is constructed
     bl_label = "Import Some Data"
