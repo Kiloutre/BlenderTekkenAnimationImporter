@@ -5,10 +5,8 @@ import struct
 
 
 class Animation0xC80x17():
-    AnimationHeader0xC8 = 0
-    AnimationFrames = list()
-
     def __init__(self, binary_data):
+        self.AnimationHeader0xC8 = 0
         self.AnimationFrames = list()
         # Initializing header
         # "< 2B H 24I" stands for little endian, 2 unsigned bytes, unsigned short, 24 unsigned 4-byte integers

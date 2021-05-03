@@ -2,7 +2,8 @@ from collections import OrderedDict
 
 
 class AnimationHeader0xC8():
-    properties = OrderedDict([('AnimationSignatureByte1', 0xC8),
+    def __init__(self, header_tuple):
+        self.properties = OrderedDict([('AnimationSignatureByte1', 0xC8),
                               ('AnimationSignatureByte2', 1),
                               ('AnimationVectorsPerFrame', 23),
                               ('AnimationLength', 0),
@@ -30,7 +31,6 @@ class AnimationHeader0xC8():
                               ('LeftKneeDescriptorMask', 6),
                               ('LeftFootDescriptorMask', 7), ])
 
-    def __init__(self, header_tuple):
         self.__check_if_header_tuple_is_valid(header_tuple)
 
         self.__initialize_animation_header(header_tuple)

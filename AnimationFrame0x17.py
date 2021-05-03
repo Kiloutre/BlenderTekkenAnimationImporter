@@ -3,9 +3,10 @@ from collections import OrderedDict
 
 
 class AnimationFrame0x17():
-    __bones_number = 0x17
+    def __init__(self, animation_frame_tuple):
+        self.__bones_number = 0x17
 
-    properties = OrderedDict([('Offset', 0),
+        self.properties = OrderedDict([('Offset', 0),
                               ('JumpStrength', 0),
                               ('Unknown', 0),
                               ('Mesh', 0),
@@ -29,7 +30,6 @@ class AnimationFrame0x17():
                               ('LeftKnee', 0),
                               ('LeftFoot', 0)])
 
-    def __init__(self, animation_frame_tuple):
         self.__check_if_animation_frame_is_valid(animation_frame_tuple)
         self.__initialize_animation_frame(animation_frame_tuple)
 
