@@ -1,4 +1,6 @@
 import bpy
+import os
+
 
 # from . import animationReader
 from . import textReader

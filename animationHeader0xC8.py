@@ -43,11 +43,13 @@ class AnimationHeader0xC8():
         if (header_tuple[0] != 0xC8):
             raise ValueError(f"AnimationSignatureByte1 must be equal to 0xC8 "
                              f"and in this animation first signature byte is equal to {header_tuple[0]}.")
-
+                             
+        """
         if (header_tuple[1] != 1):
             raise ValueError(f"AnimationSignatureByte2 must be equal to 1 "
                              f"and in this animation second signature byte is equal to {header_tuple[1]}.")
-
+        """
+        
         if (header_tuple[2] != 23):
             raise ValueError(f"This plugin only works with animations that animate 23 bones on the character. "
                              f"This animation has {header_tuple[2]} bones.")

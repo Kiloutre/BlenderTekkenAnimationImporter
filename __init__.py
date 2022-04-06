@@ -1,11 +1,11 @@
 bl_info = {
-    'name': 'Animation Import Export',
+    'name': 'BlenderTekkenAnimationImporter',
     'category': 'Animation',
     'version': (0, 0, 1),
     'blender': (2, 80, 0)
 }
 
-modulesNames = ['addCube', 'addCubePanel', 'importMenu']
+modulesNames = ['addCube', 'addCubePanel', 'importMenu', 'exportMenu']
 
 import sys
 import importlib
