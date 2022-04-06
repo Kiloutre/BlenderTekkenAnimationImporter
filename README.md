@@ -10,10 +10,10 @@ It is made to work specifically with the following model: https://mega.nz/file/N
  
 - Download the project as a .zip.
 - Rename the .zip precisely as `BlenderTekkenAnimationImporter.zip` 
-
-
 - **Manual**: Extract the archive so that it creates a folder here: `AppData\Roaming\Blender Foundation\Blender\2.92\scripts\addons`
 - **Automatic**: Open Blender,go to **Edit -> Preferences**, in the newly opened window go to the **Addons** tab, click **Install** and select the .zip you downloaded earlier
+
+An export button should now be visible in **File -> Export -> Export Tekken7 Animation**
 
 ### Credits
 
