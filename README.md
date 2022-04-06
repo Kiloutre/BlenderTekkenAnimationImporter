@@ -18,5 +18,5 @@ It is made to work specifically with the following model: https://mega.nz/file/N
 ### Credits
 
 - Tekken 7 mannequin model exported by Koenji.
-- KulaGGin for developing the first prototype of Tekken->Blender animation conversion
+- KulaGGin for developing the first prototype of Tekken->Blender animation conversion along with this plugin
 - kilo for providing information about the animation format and completing KulaGGin's work
