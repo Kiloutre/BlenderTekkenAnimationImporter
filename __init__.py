@@ -5,7 +5,7 @@ bl_info = {
     'blender': (2, 80, 0)
 }
 
-modulesNames = ['addCube', 'addCubePanel', 'importMenu', 'exportMenu']
+modulesNames = ['importMenu', 'exportMenu']
 
 import sys
 import importlib
