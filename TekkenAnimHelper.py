@@ -355,7 +355,7 @@ def getAnimFrameFromBones(armature):
     
     LeftOuterShoulder1 = visualRots["L_Arm"]['x'] - pi / 2
     LeftOuterShoulder2 = visualRots["L_Arm"]['z']
-    LeftOuterShoulder3 = visualRots["L_Arm"]['x'] * -1
+    LeftOuterShoulder3 = visualRots["L_Arm"]['y'] * -1
     
     LeftElbow1 = visualRots["L_ForeArm"]['x']
     LeftElbow2 = visualRots["L_ForeArm"]['y']
