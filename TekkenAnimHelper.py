@@ -149,10 +149,6 @@ class TekkenAnimation:
         self.field_count = int(self.frame_size / 4)
         self.recalculateSize() #Crop or add missing bytes if needed
         
-    def setLength(self, length):
-        self.length = length
-        self.writeInt(length,4)
-        
     def recalculateSize(self):
         pastSize = len(self.data)
         self.size = self.calculateSize()
@@ -283,12 +279,12 @@ def getAnimFrameFromBones(armature):
     LowerBody2 = bones["Hip"].rotation_euler.y
     LowerBody3 = bones["Hip"].rotation_euler.x - (pi / 2)
     
-    Neck1 = bones["Neck"].rotation_euler.x
+    Neck1 = bones["Neck"].rotation_euler.z * -1
     Neck2 = bones["Neck"].rotation_euler.y
-    Neck3 = bones["Neck"].rotation_euler.z
+    Neck3 = bones["Neck"].rotation_euler.x
     
-    Head1 = bones["Head"].rotation_euler.x + (pi / 2)
-    Head2 = bones["Head"].rotation_euler.z * -1
+    Head1 = bones["Head"].rotation_euler.z + (pi / 2)
+    Head2 = bones["Head"].rotation_euler.x
     Head3 = bones["Head"].rotation_euler.y + (pi / 2)
     
     # --------- SHOULDER ------------
