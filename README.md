@@ -4,7 +4,7 @@ This is an import/export plugin for Blender that makes it compatible with some T
  
 Importing does not work as of yet. Exporting should work flawlessly.
 
-It is made to work specifically with the following model: https://mega.nz/file/llJRBTrJ#l2A3h5Kfgi3MPoOzC0HowpRvc2yDQp29pk-x8h7nqeo
+It is made to work specifically with the following model: https://mega.nz/folder/05pBGLAL#XPHcsgK2tBxT3RLMbZPaFw
  
 ## Installation instructions
  
