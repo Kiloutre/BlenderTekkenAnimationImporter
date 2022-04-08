@@ -9,112 +9,6 @@ from bpy_extras.io_utils import ImportHelper
 
 from .Animation0xC80x17 import Animation0xC80x17
 
-def quaternion_rotation_matrix(Q):
-    # Extract the values from Q
-    q0 = Q[0]
-    q1 = Q[1]
-    q2 = Q[2]
-    q3 = Q[3]
-     
-    # First row of the rotation matrix
-    r00 = 2 * (q0 * q0 + q1 * q1) - 1
-    r01 = 2 * (q1 * q2 - q0 * q3)
-    r02 = 2 * (q1 * q3 + q0 * q2)
-     
-    # Second row of the rotation matrix
-    r10 = 2 * (q1 * q2 + q0 * q3)
-    r11 = 2 * (q0 * q0 + q2 * q2) - 1
-    r12 = 2 * (q2 * q3 - q0 * q1)
-     
-    # Third row of the rotation matrix
-    r20 = 2 * (q1 * q3 - q0 * q2)
-    r21 = 2 * (q2 * q3 + q0 * q1)
-    r22 = 2 * (q0 * q0 + q3 * q3) - 1
-     
-    # 3x3 rotation matrix
-    rot_matrix = np.array([[r00, r01, r02],
-                           [r10, r11, r12],
-                           [r20, r21, r22]])
-                            
-    return rot_matrix
-    
-def get_quaternion_from_euler(roll, pitch, yaw):
-  qx = np.sin(roll/2) * np.cos(pitch/2) * np.cos(yaw/2) - np.cos(roll/2) * np.sin(pitch/2) * np.sin(yaw/2)
-  qy = np.cos(roll/2) * np.sin(pitch/2) * np.cos(yaw/2) + np.sin(roll/2) * np.cos(pitch/2) * np.sin(yaw/2)
-  qz = np.cos(roll/2) * np.cos(pitch/2) * np.sin(yaw/2) - np.sin(roll/2) * np.sin(pitch/2) * np.cos(yaw/2)
-  qw = np.cos(roll/2) * np.cos(pitch/2) * np.cos(yaw/2) + np.sin(roll/2) * np.sin(pitch/2) * np.sin(yaw/2)
-  return [qx, qy, qz, qw]
-  
-def quaternionToMatrix(quaternion):
-    te = [0] * 9
-
-    x = quaternion[0]
-    y = quaternion[1]
-    z = quaternion[2]
-    w = quaternion[3]
-
-    x2 = x + x
-    y2 = y + y
-    z2 = z + z
-
-    xx = x * x2
-    xy = x * y2
-    xz = x * z2
-    yy = y * y2
-    yz = y * z2
-    zz = z * z2
-    wx = w * x2
-    wy = w * y2
-    wz = w * z2
-
-    te[ 0 ] = ( 1 - ( yy + zz ) )
-    te[ 1 ] = ( xy + wz )
-    te[ 2 ] = ( xz - wy )
-
-    te[ 3 ] = ( xy - wz )
-    te[ 4 ] = ( 1 - ( xx + zz ) )
-    te[ 5 ] = ( yz + wx )
-
-    te[ 6 ] = ( xz + wy )
-    te[ 7 ] = ( yz - wx )
-    te[ 8 ] = ( 1 - ( xx + yy ) )
-
-    return te
-    #return [[te[i] for i in range(x, 9, 3)] for x in range(3)]
-    
-def clamp(num, min_value, max_value):
-   return max(min(num, max_value), min_value)
-   
-def getRotationFromMatrix(te):
-    m11 = te[ 0 ]
-    m12 = te[ 3 ]
-    m13 = te[ 6 ]
-    
-    m21 = te[ 1 ]
-    m22 = te[ 4 ]
-    m23 = te[ 7 ]
-    
-    m31 = te[ 2 ]
-    m32 = te[ 5 ]
-    m33 = te[ 8 ]
-    
-
-    y = asin( clamp( m13, - 1, 1 ) )
-
-    if abs( m13 ) < 0.9999999:
-        x = atan2( - m23, m33 )
-        z = atan2( - m12, m11 )
-    else:
-        x = atan2( m32, m22 )
-        z = 0
-        
-    return x, y, z
-    
-def worldRotationToEuler(x, y, z):
-    quaternion = get_quaternion_from_euler(x, y, z)
-    matrix = quaternionToMatrix(quaternion)
-    return getRotationFromMatrix(matrix)
-
 class AnimationImporter(Operator, ImportHelper):
     """This appears in the tooltip of the operator and in the generated docs"""
     bl_idname = "animation_reader.read_animation"  # important since its how bpy.ops.animation_reader.read_animation is constructed
@@ -186,6 +80,7 @@ class AnimationImporter(Operator, ImportHelper):
             movement[0] = currentAnimationFrame.properties['Offset'].z * 0.001
             movement[1] = currentAnimationFrame.properties['Offset'].y * 0.001
             movement[2] = currentAnimationFrame.properties['Offset'].x * 0.001
+            movement = [0, 0, 0]
 
             offset_bone.location[0] = currentAnimationFrame.properties['JumpStrength'].z * 0.001
             offset_bone.location[1] = currentAnimationFrame.properties['JumpStrength'].y * 0.001 - 1.15
@@ -223,32 +118,15 @@ class AnimationImporter(Operator, ImportHelper):
 
             # --------------------------------------------------------
             
-            #three angles at the same time fuck shit up
-            #MAUVAIS
-            
-            xval = currentAnimationFrame.properties['RightInnerShoulder'].x
-            zval = currentAnimationFrame.properties['RightInnerShoulder'].y - (pi / 2)
-            yval = currentAnimationFrame.properties['RightInnerShoulder'].z - (pi / 2)
-            #print(xval)
-            #print(zval)
-            #print(yval)
-            
-            x, y, z = worldRotationToEuler(xval, zval, yval)
-            #print(x, y, z)
-            
-            right_inner_shoulder.rotation_euler.x = -z
-            right_inner_shoulder.rotation_euler.y = y
-            right_inner_shoulder.rotation_euler.z = x
-            right_inner_shoulder.bone.select = True
+            right_inner_shoulder.rotation_euler.x = 0
+            right_inner_shoulder.rotation_euler.y = 0
+            right_inner_shoulder.rotation_euler.z = 0
 
-            #three angles at the same time fuck shit up
-            right_outer_shoulder.rotation_euler.x = 0#currentAnimationFrame.properties['RightOuterShoulder'].x + pi / 2
-            right_outer_shoulder.rotation_euler.y = 0#currentAnimationFrame.properties['RightOuterShoulder'].z
-            right_outer_shoulder.rotation_euler.z = 0#currentAnimationFrame.properties['RightOuterShoulder'].y
+            right_outer_shoulder.rotation_euler.x = currentAnimationFrame.properties['RightOuterShoulder'].x + pi / 2
+            right_outer_shoulder.rotation_euler.y = currentAnimationFrame.properties['RightOuterShoulder'].z
+            right_outer_shoulder.rotation_euler.z = currentAnimationFrame.properties['RightOuterShoulder'].y
 
 
-            # --------------------------------------------------------
-            #BON
             right_elbow.rotation_euler.x = currentAnimationFrame.properties['RightElbow'].x
             right_elbow.rotation_euler.y = currentAnimationFrame.properties['RightElbow'].y
             right_elbow.rotation_euler.z = currentAnimationFrame.properties['RightElbow'].z
@@ -257,19 +135,14 @@ class AnimationImporter(Operator, ImportHelper):
             right_hand.rotation_euler.y = currentAnimationFrame.properties['RightHand'].z
             right_hand.rotation_euler.z = currentAnimationFrame.properties['RightHand'].y * -1
             # --------------------------------------------------------
-            #MAUVAIS
             
-            #three angles at the same time fuck shit up
             left_inner_shoulder.rotation_euler.x = 0
             left_inner_shoulder.rotation_euler.y = 0
             left_inner_shoulder.rotation_euler.z = 0
 
-            #three angles at the same time fuck shit up
-            left_outer_shoulder.rotation_euler.x = 0#currentAnimationFrame.properties['LeftOuterShoulder'].x + pi / 2
-            left_outer_shoulder.rotation_euler.y = 0#currentAnimationFrame.properties['LeftOuterShoulder'].z
-            left_outer_shoulder.rotation_euler.z = 0#currentAnimationFrame.properties['LeftOuterShoulder'].y
-            
-            # --------------------------------------------------------
+            left_outer_shoulder.rotation_euler.x = currentAnimationFrame.properties['LeftOuterShoulder'].x + pi / 2
+            left_outer_shoulder.rotation_euler.y = currentAnimationFrame.properties['LeftOuterShoulder'].z
+            left_outer_shoulder.rotation_euler.z = currentAnimationFrame.properties['LeftOuterShoulder'].y
 
             left_elbow.rotation_euler.x = currentAnimationFrame.properties['LeftElbow'].x
             left_elbow.rotation_euler.y = currentAnimationFrame.properties['LeftElbow'].y
