@@ -10,7 +10,7 @@ It is made to work specifically with the following model: https://mega.nz/folder
  
 - Download the project as a .zip.
 - Rename the .zip precisely as `BlenderTekkenAnimationImporter.zip` 
-- **Manual**: Extract the archive so that it creates a folder here: `AppData\Roaming\Blender Foundation\Blender\2.92\scripts\addons`
+- **Manual**: Extract the archive so that it creates a folder here: `AppData\Roaming\Blender Foundation\Blender\2.92\scripts\addons`. Make sure the folder is correctly named **BlenderTekkenAnimationImporter**
 - **Automatic**: Open Blender,go to **Edit -> Preferences**, in the newly opened window go to the **Add-ons** tab, click **Install** and select the .zip you downloaded earlier.
 - If the addon is still not appearing, make sure it is enabled in **Edit -> Preferences -> Add-ons**
 
