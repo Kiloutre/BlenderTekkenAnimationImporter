@@ -6,7 +6,6 @@ from bpy.props import StringProperty
 from bpy.types import Operator
 from bpy_extras.io_utils import ExportHelper
 
-from .Animation0xC80x17 import Animation0xC80x17
 from . TekkenAnimHelper import TekkenAnimation, getAnimFrameFromBones
 
 def get_keyframes(obj):
