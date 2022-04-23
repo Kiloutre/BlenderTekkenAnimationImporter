@@ -8,6 +8,7 @@ from bpy.types import Operator
 from bpy_extras.io_utils import ImportHelper
 
 from .Animation0xC80x17 import Animation0xC80x17
+from .TekkenAnimHelper import applyRotationFromAnimdata
 
 class AnimationImporter(Operator, ImportHelper):
     """This appears in the tooltip of the operator and in the generated docs"""
@@ -48,7 +49,7 @@ class AnimationImporter(Operator, ImportHelper):
         bpy.context.scene.frame_end = len(animation.AnimationFrames)
         
         for currentAnimationFrameIndex in range(len(animation.AnimationFrames)):
-            currentAnimationFrame = animation.AnimationFrames[currentAnimationFrameIndex]
+            currentAnimationFrame = animation.AnimationFrames[currentAnimationFrameIndex].properties
 
             armature = bpy.data.objects['Armature']
             offset_bone = armature.pose.bones['BODY_SCALE__group']
@@ -76,103 +77,77 @@ class AnimationImporter(Operator, ImportHelper):
             left_knee = armature.pose.bones['L_Leg']
             left_foot = armature.pose.bones['L_Foot']
             
-            movement = [0, 0, 0]
-            movement[0] = currentAnimationFrame.properties['Offset'].z * 0.001
-            movement[1] = currentAnimationFrame.properties['Offset'].y * 0.001
-            movement[2] = currentAnimationFrame.properties['Offset'].x * 0.001
-            movement = [0, 0, 0]
-
-            offset_bone.location[0] = currentAnimationFrame.properties['JumpStrength'].z * 0.001
-            offset_bone.location[1] = currentAnimationFrame.properties['JumpStrength'].y * 0.001 - 1.15
-            offset_bone.location[2] = currentAnimationFrame.properties['JumpStrength'].x * 0.001
-            
-            offset_bone.location[0] += movement[0]
-            offset_bone.location[1] += movement[1]
-            offset_bone.location[2] += movement[2]
-            
-            base_bone.rotation_euler.x = currentAnimationFrame.properties['Mesh'].z
-            base_bone.rotation_euler.y = 0 #currentAnimationFrame.properties['Mesh'].y #temporary
-            base_bone.rotation_euler.z = currentAnimationFrame.properties['Mesh'].x
-
-            """
-            upper_body_bone.rotation_euler.x = currentAnimationFrame.properties['Mesh'].z
-            upper_body_bone.rotation_euler.y = currentAnimationFrame.properties['Mesh'].y
-            upper_body_bone.rotation_euler.z = currentAnimationFrame.properties['Mesh'].x * -1
-            """
-            
-            upper_body_bone.rotation_euler.x = currentAnimationFrame.properties['UpperBody'].x
-            upper_body_bone.rotation_euler.y = currentAnimationFrame.properties['UpperBody'].y
-            upper_body_bone.rotation_euler.z = currentAnimationFrame.properties['UpperBody'].z - (pi / 2)
-
-            lower_body_bone.rotation_euler.x = currentAnimationFrame.properties['LowerBody'].x
-            lower_body_bone.rotation_euler.y = currentAnimationFrame.properties['LowerBody'].y
-            lower_body_bone.rotation_euler.z = currentAnimationFrame.properties['LowerBody'].z + (pi / 2)
-
-            neck_bone.rotation_euler.x = currentAnimationFrame.properties['Neck'].x
-            neck_bone.rotation_euler.y = currentAnimationFrame.properties['Neck'].y
-            neck_bone.rotation_euler.z = currentAnimationFrame.properties['Neck'].z
-
-            head_bone.rotation_euler.x = currentAnimationFrame.properties['Head'].x - (pi / 2)
-            head_bone.rotation_euler.y = currentAnimationFrame.properties['Head'].z - (pi / 2)
-            head_bone.rotation_euler.z = currentAnimationFrame.properties['Head'].y * -1
-
-            # --------------------------------------------------------
-            
-            right_inner_shoulder.rotation_euler.x = 0
-            right_inner_shoulder.rotation_euler.y = 0
-            right_inner_shoulder.rotation_euler.z = 0
-
-            right_outer_shoulder.rotation_euler.x = currentAnimationFrame.properties['RightOuterShoulder'].x + pi / 2
-            right_outer_shoulder.rotation_euler.y = currentAnimationFrame.properties['RightOuterShoulder'].z
-            right_outer_shoulder.rotation_euler.z = currentAnimationFrame.properties['RightOuterShoulder'].y
-
-
-            right_elbow.rotation_euler.x = currentAnimationFrame.properties['RightElbow'].x
-            right_elbow.rotation_euler.y = currentAnimationFrame.properties['RightElbow'].y
-            right_elbow.rotation_euler.z = currentAnimationFrame.properties['RightElbow'].z
-
-            right_hand.rotation_euler.x = currentAnimationFrame.properties['RightHand'].x - (pi / 2)
-            right_hand.rotation_euler.y = currentAnimationFrame.properties['RightHand'].z
-            right_hand.rotation_euler.z = currentAnimationFrame.properties['RightHand'].y * -1
-            # --------------------------------------------------------
-            
-            left_inner_shoulder.rotation_euler.x = 0
-            left_inner_shoulder.rotation_euler.y = 0
-            left_inner_shoulder.rotation_euler.z = 0
-
-            left_outer_shoulder.rotation_euler.x = currentAnimationFrame.properties['LeftOuterShoulder'].x + pi / 2
-            left_outer_shoulder.rotation_euler.y = currentAnimationFrame.properties['LeftOuterShoulder'].z
-            left_outer_shoulder.rotation_euler.z = currentAnimationFrame.properties['LeftOuterShoulder'].y
-
-            left_elbow.rotation_euler.x = currentAnimationFrame.properties['LeftElbow'].x
-            left_elbow.rotation_euler.y = currentAnimationFrame.properties['LeftElbow'].y
-            left_elbow.rotation_euler.z = currentAnimationFrame.properties['LeftElbow'].z
-
-            left_hand.rotation_euler.x = currentAnimationFrame.properties['LeftHand'].x - (pi / 2)
-            left_hand.rotation_euler.y = currentAnimationFrame.properties['LeftHand'].z
-            left_hand.rotation_euler.z = currentAnimationFrame.properties['LeftHand'].y * -1
-
-            right_hip.rotation_euler.x = currentAnimationFrame.properties['RightHip'].x
-            right_hip.rotation_euler.y = currentAnimationFrame.properties['RightHip'].y
-            right_hip.rotation_euler.z = currentAnimationFrame.properties['RightHip'].z
-
-            # right_knee.rotation_euler.x = currentAnimationFrame.properties['RightKnee'].x
-            # right_knee.rotation_euler.y = currentAnimationFrame.properties['RightKnee'].y shouldn't set because it doesn't bent in Tekken
-            right_knee.rotation_euler.z = currentAnimationFrame.properties['RightKnee'].z
-
-            right_foot.rotation_euler.x = currentAnimationFrame.properties['RightFoot'].x
-            right_foot.rotation_euler.y = currentAnimationFrame.properties['RightFoot'].y
-            right_foot.rotation_euler.z = currentAnimationFrame.properties['RightFoot'].z
-
-            left_hip.rotation_euler.x = currentAnimationFrame.properties['LeftHip'].x
-            left_hip.rotation_euler.y = currentAnimationFrame.properties['LeftHip'].y
-            left_hip.rotation_euler.z = currentAnimationFrame.properties['LeftHip'].z
-
-            left_knee.rotation_euler.z = currentAnimationFrame.properties['LeftKnee'].z
-
-            left_foot.rotation_euler.x = currentAnimationFrame.properties['LeftFoot'].x
-            left_foot.rotation_euler.y = currentAnimationFrame.properties['LeftFoot'].y
-            left_foot.rotation_euler.z = currentAnimationFrame.properties['LeftFoot'].z
+            applyRotationFromAnimdata(armature, [
+                currentAnimationFrame['Offset'].x,
+                currentAnimationFrame['Offset'].y,
+                currentAnimationFrame['Offset'].z,
+                currentAnimationFrame['JumpStrength'].x,
+                currentAnimationFrame['JumpStrength'].y,
+                currentAnimationFrame['JumpStrength'].z,
+                currentAnimationFrame['Unknown'].x,
+                currentAnimationFrame['Unknown'].y,
+                currentAnimationFrame['Unknown'].z,
+                currentAnimationFrame['Mesh'].x,
+                currentAnimationFrame['Mesh'].y,
+                currentAnimationFrame['Mesh'].z,
+                currentAnimationFrame['UpperBody'].x,
+                currentAnimationFrame['UpperBody'].y,
+                currentAnimationFrame['UpperBody'].z,
+                currentAnimationFrame['LowerBody'].x,
+                currentAnimationFrame['LowerBody'].y,
+                currentAnimationFrame['LowerBody'].z,
+                currentAnimationFrame['SpineFlexure'].x,
+                currentAnimationFrame['SpineFlexure'].y,
+                currentAnimationFrame['SpineFlexure'].z,
+                currentAnimationFrame['Neck'].x,
+                currentAnimationFrame['Neck'].y,
+                currentAnimationFrame['Neck'].z,
+                currentAnimationFrame['Head'].x,
+                currentAnimationFrame['Head'].y,
+                currentAnimationFrame['Head'].z,
+                currentAnimationFrame['RightInnerShoulder'].x,
+                currentAnimationFrame['RightInnerShoulder'].y,
+                currentAnimationFrame['RightInnerShoulder'].z,
+                currentAnimationFrame['RightOuterShoulder'].x,
+                currentAnimationFrame['RightOuterShoulder'].y,
+                currentAnimationFrame['RightOuterShoulder'].z,
+                currentAnimationFrame['RightElbow'].x,
+                currentAnimationFrame['RightElbow'].y,
+                currentAnimationFrame['RightElbow'].z,
+                currentAnimationFrame['RightHand'].x,
+                currentAnimationFrame['RightHand'].y,
+                currentAnimationFrame['RightHand'].z,
+                currentAnimationFrame['LeftInnerShoulder'].x,
+                currentAnimationFrame['LeftInnerShoulder'].y,
+                currentAnimationFrame['LeftInnerShoulder'].z,
+                currentAnimationFrame['LeftOuterShoulder'].x,
+                currentAnimationFrame['LeftOuterShoulder'].y,
+                currentAnimationFrame['LeftOuterShoulder'].z,
+                currentAnimationFrame['LeftElbow'].x,
+                currentAnimationFrame['LeftElbow'].y,
+                currentAnimationFrame['LeftElbow'].z,
+                currentAnimationFrame['LeftHand'].x,
+                currentAnimationFrame['LeftHand'].y,
+                currentAnimationFrame['LeftHand'].z,
+                currentAnimationFrame['RightHip'].x,
+                currentAnimationFrame['RightHip'].y,
+                currentAnimationFrame['RightHip'].z,
+                currentAnimationFrame['RightKnee'].x,
+                currentAnimationFrame['RightKnee'].y,
+                currentAnimationFrame['RightKnee'].z,
+                currentAnimationFrame['RightFoot'].x,
+                currentAnimationFrame['RightFoot'].y,
+                currentAnimationFrame['RightFoot'].z,
+                currentAnimationFrame['LeftHip'].x,
+                currentAnimationFrame['LeftHip'].y,
+                currentAnimationFrame['LeftHip'].z,
+                currentAnimationFrame['LeftKnee'].x,
+                currentAnimationFrame['LeftKnee'].y,
+                currentAnimationFrame['LeftKnee'].z,
+                currentAnimationFrame['LeftFoot'].x,
+                currentAnimationFrame['LeftFoot'].y,
+                currentAnimationFrame['LeftFoot'].z,
+            ])
 
             offset_bone.keyframe_insert(data_path = 'location', frame = currentAnimationFrameIndex + 1)
             base_bone.keyframe_insert(data_path = 'rotation_euler', frame = currentAnimationFrameIndex + 1)
