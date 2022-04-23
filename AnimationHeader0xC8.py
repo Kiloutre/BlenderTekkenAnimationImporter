@@ -32,7 +32,6 @@ class AnimationHeader0xC8():
                               ('LeftFootDescriptorMask', 7), ])
 
         self.__check_if_header_tuple_is_valid(header_tuple)
-
         self.__initialize_animation_header(header_tuple)
 
     def __check_if_header_tuple_is_valid(self, header_tuple):
@@ -48,11 +47,11 @@ class AnimationHeader0xC8():
         if (header_tuple[1] != 1):
             raise ValueError(f"AnimationSignatureByte2 must be equal to 1 "
                              f"and in this animation second signature byte is equal to {header_tuple[1]}.")
-        """
         
         if (header_tuple[2] != 23):
             raise ValueError(f"This plugin only works with animations that animate 23 bones on the character. "
                              f"This animation has {header_tuple[2]} bones.")
+        """
 
     def __initialize_animation_header(self, header_tuple):
         header_properties_list = list(self.properties.items())

@@ -7,7 +7,7 @@ from bpy.props import StringProperty
 from bpy.types import Operator
 from bpy_extras.io_utils import ImportHelper
 
-from .Animation0xC80x17 import Animation0xC80x17
+from .Animation0xC8 import Animation0xC8
 from .TekkenAnimHelper import applyRotationFromAnimdata
 
 class AnimationImporter(Operator, ImportHelper):
@@ -23,19 +23,10 @@ class AnimationImporter(Operator, ImportHelper):
         options = {'HIDDEN'},
     )
 
-    def __init__(self):
-
-        self.needed_bones_list = list([
-            'BODY_SCALE__group',
-            'Spine1',
-            'Hip',
-            'BASE'
-        ])
-
     def execute(self, context):
         animation_binary_data = self.__get_binary_data_from_animation_file(context, self.filepath)
         animation = self.__get_animation(animation_binary_data)
-        print(animation)
+        #print(animation)
 
         self.insert_key_frames_for_animation(animation)
 
@@ -45,7 +36,7 @@ class AnimationImporter(Operator, ImportHelper):
     def check_if_armature_has_all_bones_needed(self, armature_name):
         armature = bpy.data.objects['armature_name']
 
-    def insert_key_frames_for_animation(self, animation: Animation0xC80x17):
+    def insert_key_frames_for_animation(self, animation: Animation0xC8):
         bpy.context.scene.frame_end = len(animation.AnimationFrames)
         
         for currentAnimationFrameIndex in range(len(animation.AnimationFrames)):
@@ -149,38 +140,40 @@ class AnimationImporter(Operator, ImportHelper):
                 currentAnimationFrame['LeftFoot'].z,
             ])
 
-            offset_bone.keyframe_insert(data_path = 'location', frame = currentAnimationFrameIndex + 1)
-            base_bone.keyframe_insert(data_path = 'rotation_euler', frame = currentAnimationFrameIndex + 1)
-            upper_body_bone.keyframe_insert(data_path = 'rotation_euler', frame = currentAnimationFrameIndex + 1)
-            lower_body_bone.keyframe_insert(data_path = 'rotation_euler', frame = currentAnimationFrameIndex + 1)
-            neck_bone.keyframe_insert(data_path = 'rotation_euler', frame = currentAnimationFrameIndex + 1)
-            head_bone.keyframe_insert(data_path = 'rotation_euler', frame = currentAnimationFrameIndex + 1)
+            targetFrame = currentAnimationFrameIndex + 1
+            
+            offset_bone.keyframe_insert(data_path = 'location', frame = targetFrame)
+            base_bone.keyframe_insert(data_path = 'rotation_euler', frame = targetFrame)
+            upper_body_bone.keyframe_insert(data_path = 'rotation_euler', frame = targetFrame)
+            lower_body_bone.keyframe_insert(data_path = 'rotation_euler', frame = targetFrame)
+            neck_bone.keyframe_insert(data_path = 'rotation_euler', frame = targetFrame)
+            head_bone.keyframe_insert(data_path = 'rotation_euler', frame = targetFrame)
 
-            right_inner_shoulder.keyframe_insert(data_path = 'rotation_euler', frame = currentAnimationFrameIndex + 1)
-            right_outer_shoulder.keyframe_insert(data_path = 'rotation_euler', frame = currentAnimationFrameIndex + 1)
-            right_elbow.keyframe_insert(data_path = 'rotation_euler', frame = currentAnimationFrameIndex + 1)
-            right_hand.keyframe_insert(data_path = 'rotation_euler', frame = currentAnimationFrameIndex + 1)
+            right_inner_shoulder.keyframe_insert(data_path = 'rotation_euler', frame = targetFrame)
+            right_outer_shoulder.keyframe_insert(data_path = 'rotation_euler', frame = targetFrame)
+            right_elbow.keyframe_insert(data_path = 'rotation_euler', frame = targetFrame)
+            right_hand.keyframe_insert(data_path = 'rotation_euler', frame = targetFrame)
 
-            left_inner_shoulder.keyframe_insert(data_path = 'rotation_euler', frame = currentAnimationFrameIndex + 1)
-            left_outer_shoulder.keyframe_insert(data_path = 'rotation_euler', frame = currentAnimationFrameIndex + 1)
-            left_elbow.keyframe_insert(data_path = 'rotation_euler', frame = currentAnimationFrameIndex + 1)
-            left_hand.keyframe_insert(data_path = 'rotation_euler', frame = currentAnimationFrameIndex + 1)
+            left_inner_shoulder.keyframe_insert(data_path = 'rotation_euler', frame = targetFrame)
+            left_outer_shoulder.keyframe_insert(data_path = 'rotation_euler', frame = targetFrame)
+            left_elbow.keyframe_insert(data_path = 'rotation_euler', frame = targetFrame)
+            left_hand.keyframe_insert(data_path = 'rotation_euler', frame = targetFrame)
 
-            right_hip.keyframe_insert(data_path = 'rotation_euler', frame = currentAnimationFrameIndex + 1)
-            right_knee.keyframe_insert(data_path = 'rotation_euler', frame = currentAnimationFrameIndex + 1)
-            right_foot.keyframe_insert(data_path = 'rotation_euler', frame = currentAnimationFrameIndex + 1)
+            right_hip.keyframe_insert(data_path = 'rotation_euler', frame = targetFrame)
+            right_knee.keyframe_insert(data_path = 'rotation_euler', frame = targetFrame)
+            right_foot.keyframe_insert(data_path = 'rotation_euler', frame = targetFrame)
 
-            left_hip.keyframe_insert(data_path = 'rotation_euler', frame = currentAnimationFrameIndex + 1)
-            left_knee.keyframe_insert(data_path = 'rotation_euler', frame = currentAnimationFrameIndex + 1)
-            left_foot.keyframe_insert(data_path = 'rotation_euler', frame = currentAnimationFrameIndex + 1)
+            left_hip.keyframe_insert(data_path = 'rotation_euler', frame = targetFrame)
+            left_knee.keyframe_insert(data_path = 'rotation_euler', frame = targetFrame)
+            left_foot.keyframe_insert(data_path = 'rotation_euler', frame = targetFrame)
 
     def __get_binary_data_from_animation_file(self, context, filepath = None):
         with open(filepath, 'rb') as animationFile:
             binary_data = animationFile.read()
             return binary_data
 
-    def __get_animation(self, binary_data) -> Animation0xC80x17:
+    def __get_animation(self, binary_data) -> Animation0xC8:
         # "< 2B H 24I" stands for little endian, 2 unsigned bytes, unsigned short, 24 unsigned 4-byte integers
-        animation = Animation0xC80x17(binary_data)
+        animation = Animation0xC8(binary_data)
 
         return animation
