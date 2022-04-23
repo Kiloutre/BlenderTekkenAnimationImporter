@@ -134,6 +134,12 @@ class TekkenAnimation:
         0x23: 0x94,
         0x31: 0xcc 
     }
+        
+    def _getHeaderSizeFromArgs_(bone_count):
+        return TekkenAnimation.AnimC8OffsetTable[bone_count]
+        
+    def _getFramesizeFromArgs_(bone_count):
+        return bone_count * 0xC
 
     def __init__(self, data=None):
         if data == None:
@@ -516,9 +522,9 @@ def applyRotationFromAnimdata(armature, animdata):
     left_knee = armature.pose.bones['L_Leg']
     left_foot = armature.pose.bones['L_Foot']
     
-    offset_bone.location[0] = animdata[0] * 0.001
-    offset_bone.location[1] = animdata[1] * 0.001
-    offset_bone.location[2] = animdata[2] * 0.001
+    offset_bone.location.x = animdata[3] / 1000
+    offset_bone.location.y = animdata[4] / 1000 - 1.15
+    offset_bone.location.z = animdata[5] / 1000
 
     base_bone.rotation_euler.x = animdata[11]
     base_bone.rotation_euler.y = animdata[10]
