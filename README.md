@@ -1,8 +1,7 @@
 # Tekken 7 animation to Blender importer/exporter plugin
 
 This is an import/export plugin for Blender that makes it compatible with some Tekken 7 animations.
- 
-Importing does not work as of yet. Exporting should work flawlessly.
+Both importing and exporting work decently well however rare are the animations that are compatible with this tool
 
 It is made to work specifically with the following model: https://mega.nz/folder/05pBGLAL#XPHcsgK2tBxT3RLMbZPaFw
  
