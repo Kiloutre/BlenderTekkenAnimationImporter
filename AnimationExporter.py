@@ -44,12 +44,12 @@ class AnimationExporter(Operator, ExportHelper):
         options = {'HIDDEN'},
     )
     
-    movementType : bpy.props.EnumProperty(
-            name="Movement type",
+    keepEndPos : bpy.props.EnumProperty(
+            name="Keep end position",
             description="Choose if the character will reset to its original position when the animation ends",
             items=(
-                ("OPT_0", "Movement", "Keeps its ending position"),
-                ("OPT_1", "Position", "Resets to original position"),
+                ("OPT_0", "Keep end pos", "Character stays where they are at the animation's end"),
+                ("OPT_1", "Reset end pos", "Character goes back original position"),
             ),
             default='OPT_0',
             )
@@ -69,7 +69,7 @@ class AnimationExporter(Operator, ExportHelper):
             return {'FINISHED'}
 
         frames = []
-        keepEndPos = self.movementType == 'OPT_0'
+        keepEndPos = self.keepEndPos == 'OPT_0'
         
         for f in range(sce.frame_start, animLength+1):
             sce.frame_set(f)
