@@ -43,6 +43,16 @@ class AnimationExporter(Operator, ExportHelper):
         default = "*.bin",
         options = {'HIDDEN'},
     )
+    
+    movementType : bpy.props.EnumProperty(
+            name="Movement type",
+            description="Choose if the character will reset to its original position when the animation ends",
+            items=(
+                ("OPT_0", "Movement", "Keeps its ending position"),
+                ("OPT_1", "Position", "Resets to original position"),
+            ),
+            default='OPT_0',
+            )
 
     def execute(self, context):
         sce = bpy.context.scene
@@ -52,12 +62,18 @@ class AnimationExporter(Operator, ExportHelper):
             self.report({'ERROR'}, "No valid armature selected")
             return {'FINISHED'}
         
-        animLength = get_keyframes(armature)[-1]
+        try:
+            animLength = get_keyframes(armature)[-1]
+        except:
+            self.report({'ERROR'}, "No keyframe for animation")
+            return {'FINISHED'}
 
         frames = []
+        keepEndPos = self.movementType == 'OPT_0'
+        
         for f in range(sce.frame_start, animLength+1):
             sce.frame_set(f)
-            frames.append(getAnimFrameFromBones(armature))
+            frames.append(getAnimFrameFromBones(armature, keepEndPos))
         
         newAnimation = TekkenAnimation()
         newAnimation.setLength(animLength)
@@ -86,6 +102,72 @@ class FaceAnimationExporter(Operator, ExportHelper):
         options = {'HIDDEN'},
     )
 
+    type : bpy.props.EnumProperty(
+            name="Target character",
+            description="Choose the character the animation will play on",
+            items=(
+                ("OPT_0", "Paul", "Paul"),
+                ("OPT_1", "Law", "Law"),
+                ("OPT_2", "King", "King"),
+                ("OPT_3", "Yoshimitsu", "Yoshimitsu"),
+                ("OPT_4", "Hwoarang", "Hwoarang"),
+                ("OPT_5", "Xiaoyu", "Xiaoyu"),
+                ("OPT_6", "Jin", "Jin"),
+                ("OPT_7", "Bryan", "Bryan"),
+                ("OPT_8", "Heihachi", "Heihachi"),
+                ("OPT_9", "Kazuya", "Kazuya"),
+                ("OPT_10", "Steve", "Steve"),
+                ("OPT_11", "Jack-7", "Jack-7"),
+                ("OPT_12", "Asuka", "Asuka"),
+                ("OPT_13", "Devil Jin", "Devil Jin"),
+                ("OPT_14", "Feng", "Feng"),
+                ("OPT_15", "Lili", "Lili"),
+                ("OPT_16", "Dragunov", "Dragunov"),
+                ("OPT_17", "Leo", "Leo"),
+                ("OPT_18", "Lars", "Lars"),
+                ("OPT_19", "Alisa", "Alisa"),
+                ("OPT_20", "Claudio", "Claudio"),
+                ("OPT_21", "Katarina", "Katarina"),
+                ("OPT_22", "Lucky Chloe", "Lucky Chloe"),
+                ("OPT_23", "Shaheen", "Shaheen"),
+                ("OPT_24", "Josie", "Josie"),
+                ("OPT_25", "Gigas", "Gigas"),
+                ("OPT_26", "Kazumi", "Kazumi"),
+                ("OPT_27", "Devil Kazumi", "Devil Kazumi"),
+                ("OPT_28", "Nina", "Nina"),
+                ("OPT_29", "Master Raven", "Master Raven"),
+                ("OPT_30", "Lee", "Lee"),
+                ("OPT_31", "Bob", "Bob"),
+                ("OPT_32", "Akuma", "Akuma"),
+                ("OPT_33", "Kuma", "Kuma"),
+                ("OPT_34", "Panda", "Panda"),
+                ("OPT_35", "Eddy", "Eddy"),
+                ("OPT_36", "Elisa", "Elisa"),
+                ("OPT_37", "Miguel", "Miguel"),
+                ("OPT_38", "Soldier", "Soldier"),
+                ("OPT_39", "Child Kazuya", "Child Kazuya"),
+                ("OPT_40", "Jack-5", "Jack-5"),
+                ("OPT_41", "Young Heihachi", "Young Heihachi"),
+                ("OPT_42", "Dummy", "Dummy"),
+                ("OPT_43", "Geese", "Geese"),
+                ("OPT_44", "Noctis", "Noctis"),
+                ("OPT_45", "Anna", "Anna"),
+                ("OPT_46", "Lei", "Lei"),
+                ("OPT_47", "Marduk", "Marduk"),
+                ("OPT_48", "Armor King", "Armor King"),
+                ("OPT_49", "Julia", "Julia"),
+                ("OPT_50", "Negan", "Negan"),
+                ("OPT_51", "Zafina", "Zafina"),
+                ("OPT_52", "Ganryu", "Ganryu"),
+                ("OPT_53", "Leroy", "Leroy"),
+                ("OPT_54", "Fahkumram", "Fahkumram"),
+                ("OPT_55", "Kunimitsu", "Kunimitsu"),
+                ("OPT_56", "Lidia", "Lidia"),
+            ),
+            default='OPT_0',
+            )
+    
+    
     def execute(self, context):
         sce = bpy.context.scene
         armature = getSourceArmature(bpy.context)
@@ -94,9 +176,13 @@ class FaceAnimationExporter(Operator, ExportHelper):
             self.report({'ERROR'}, "No valid armature selected")
             return {'FINISHED'}
         
-        animLength = get_keyframes(armature)[-1]
+        try:
+            animLength = get_keyframes(armature)[-1]
+        except:
+            self.report({'ERROR'}, "No keyframe for animation")
+            return {'FINISHED'}
 
-        characterId = 0
+        characterId = int(self.type[4:])
         face_base_pos = getCharacterFacePos(characterId)
         
         frames = []
@@ -139,7 +225,11 @@ class LeftHandAnimationExporter(Operator, ExportHelper):
             self.report({'ERROR'}, "No valid armature selected")
             return {'FINISHED'}
         
-        animLength = get_keyframes(armature)[-1]
+        try:
+            animLength = get_keyframes(armature)[-1]
+        except:
+            self.report({'ERROR'}, "No keyframe for animation")
+            return {'FINISHED'}
 
         frames = []
         for f in range(sce.frame_start, animLength+1):
@@ -181,7 +271,11 @@ class RightHandAnimationExporter(Operator, ExportHelper):
             self.report({'ERROR'}, "No valid armature selected")
             return {'FINISHED'}
         
-        animLength = get_keyframes(armature)[-1]
+        try:
+            animLength = get_keyframes(armature)[-1]
+        except:
+            self.report({'ERROR'}, "No keyframe for animation")
+            return {'FINISHED'}
 
         frames = []
         for f in range(sce.frame_start, animLength+1):
