@@ -18,7 +18,7 @@ def get_keyframes(obj):
                 x, y = keyframe.co
                 if x not in keyframes:
                     keyframes.append((ceil(x)))
-    return keyframes
+    return sorted(keyframes)
     
 def getSourceArmature(context):
     armature = context.object
