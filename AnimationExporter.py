@@ -63,7 +63,7 @@ class AnimationExporter(Operator, ExportHelper):
             return {'FINISHED'}
         
         try:
-            animLength = get_keyframes(armature)[-1]
+            maxAnimLength = get_keyframes(armature)[-1]
         except:
             self.report({'ERROR'}, "No keyframe for animation")
             return {'FINISHED'}
@@ -71,17 +71,17 @@ class AnimationExporter(Operator, ExportHelper):
         frames = []
         keepEndPos = self.keepEndPos == 'OPT_0'
         
-        for f in range(sce.frame_start, animLength+1):
+        for f in range(sce.frame_start, sce.frame_end):
             sce.frame_set(f)
             frames.append(getAnimFrameFromBones(armature, keepEndPos))
         
         newAnimation = TekkenAnimation()
-        newAnimation.setLength(animLength)
+        newAnimation.setLength(len(frames))
         newAnimation.recalculateSize()
         
-        for f in range(animLength):
-            for fieldId, fieldValue in enumerate(frames[f]):
-                newAnimation.setField(fieldValue, f, fieldId)
+        for i, f in enumerate(frames):
+            for fieldId, fieldValue in enumerate(f):
+                newAnimation.setField(fieldValue, i, fieldId)
             
         with open(self.filepath, "wb") as f:
             f.write(bytes(newAnimation.data))
@@ -177,7 +177,7 @@ class FaceAnimationExporter(Operator, ExportHelper):
             return {'FINISHED'}
         
         try:
-            animLength = get_keyframes(armature)[-1]
+            maxAnimLength = get_keyframes(armature)[-1]
         except:
             self.report({'ERROR'}, "No keyframe for animation")
             return {'FINISHED'}
@@ -186,17 +186,18 @@ class FaceAnimationExporter(Operator, ExportHelper):
         face_base_pos = getCharacterFacePos(characterId)
         
         frames = []
-        for f in range(sce.frame_start, animLength+1):
+        
+        for f in range(sce.frame_start, sce.frame_end):
             sce.frame_set(f)
-            frames.append(getFaceAnimFrameFromBones(armature, face_base_pos))
+            frames.append(getAnimFrameFromBones(armature, keepEndPos))
         
         newAnimation = TekkenAnimation(type="face")
         newAnimation.setLength(animLength)
         newAnimation.recalculateSize()
         
-        for f in range(animLength):
-            for fieldId, fieldValue in enumerate(frames[f]):
-                newAnimation.setField(fieldValue, f, fieldId)
+        for i, f in enumerate(frames):
+            for fieldId, fieldValue in enumerate(f):
+                newAnimation.setField(fieldValue, i, fieldId)
             
         with open(self.filepath, "wb") as f:
             f.write(bytes(newAnimation.data))
@@ -226,23 +227,24 @@ class LeftHandAnimationExporter(Operator, ExportHelper):
             return {'FINISHED'}
         
         try:
-            animLength = get_keyframes(armature)[-1]
+            maxAnimLength = get_keyframes(armature)[-1]
         except:
             self.report({'ERROR'}, "No keyframe for animation")
             return {'FINISHED'}
 
         frames = []
-        for f in range(sce.frame_start, animLength+1):
+        
+        for f in range(sce.frame_start, sce.frame_end):
             sce.frame_set(f)
-            frames.append(getLeftHandAnimFrameFromBones(armature))
+            frames.append(getAnimFrameFromBones(armature, keepEndPos))
         
         newAnimation = TekkenAnimation(type="hand")
         newAnimation.setLength(animLength)
         newAnimation.recalculateSize()
         
-        for f in range(animLength):
-            for fieldId, fieldValue in enumerate(frames[f]):
-                newAnimation.setField(fieldValue, f, fieldId)
+        for i, f in enumerate(frames):
+            for fieldId, fieldValue in enumerate(f):
+                newAnimation.setField(fieldValue, i, fieldId)
             
         with open(self.filepath, "wb") as f:
             f.write(bytes(newAnimation.data))
@@ -272,23 +274,23 @@ class RightHandAnimationExporter(Operator, ExportHelper):
             return {'FINISHED'}
         
         try:
-            animLength = get_keyframes(armature)[-1]
+            maxAnimLength = get_keyframes(armature)[-1]
         except:
             self.report({'ERROR'}, "No keyframe for animation")
             return {'FINISHED'}
 
         frames = []
-        for f in range(sce.frame_start, animLength+1):
+        for f in range(sce.frame_start, sce.frame_end):
             sce.frame_set(f)
-            frames.append(getRightHandAnimFrameFromBones(armature))
+            frames.append(getAnimFrameFromBones(armature, keepEndPos))
         
         newAnimation = TekkenAnimation(type="hand")
         newAnimation.setLength(animLength)
         newAnimation.recalculateSize()
         
-        for f in range(animLength):
-            for fieldId, fieldValue in enumerate(frames[f]):
-                newAnimation.setField(fieldValue, f, fieldId)
+        for i, f in enumerate(frames):
+            for fieldId, fieldValue in enumerate(f):
+                newAnimation.setField(fieldValue, i, fieldId)
             
         with open(self.filepath, "wb") as f:
             f.write(bytes(newAnimation.data))
