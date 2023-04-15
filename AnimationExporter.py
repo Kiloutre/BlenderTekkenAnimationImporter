@@ -192,7 +192,7 @@ class FaceAnimationExporter(Operator, ExportHelper):
             frames.append(getAnimFrameFromBones(armature, keepEndPos))
         
         newAnimation = TekkenAnimation(type="face")
-        newAnimation.setLength(animLength)
+        newAnimation.setLength(len(frames))
         newAnimation.recalculateSize()
         
         for i, f in enumerate(frames):
@@ -239,7 +239,7 @@ class LeftHandAnimationExporter(Operator, ExportHelper):
             frames.append(getAnimFrameFromBones(armature, keepEndPos))
         
         newAnimation = TekkenAnimation(type="hand")
-        newAnimation.setLength(animLength)
+        newAnimation.setLength(len(frames))
         newAnimation.recalculateSize()
         
         for i, f in enumerate(frames):
@@ -285,7 +285,7 @@ class RightHandAnimationExporter(Operator, ExportHelper):
             frames.append(getAnimFrameFromBones(armature, keepEndPos))
         
         newAnimation = TekkenAnimation(type="hand")
-        newAnimation.setLength(animLength)
+        newAnimation.setLength(len(frames))
         newAnimation.recalculateSize()
         
         for i, f in enumerate(frames):
